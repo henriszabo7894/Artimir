@@ -225,7 +225,7 @@
     </div>
 
     <script>
-        setInterval(() => {
+        const reloadInterval = setInterval(() => {
             location.reload();
         }, 3000);
 
@@ -234,6 +234,8 @@
         }, 5000);
 
         function adminAccess() {
+            clearInterval(reloadInterval);
+
             const code = prompt("Code développeur :");
 
             if (!code) return;
