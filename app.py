@@ -73,7 +73,8 @@ def mapping_capture():
 
 
 def mapping_narration_start():
-    return mapping_command("narration/start")
+    age_group = session.get("age_group", "adulte")
+    return mapping_command(f"narration/start/{age_group}")
 
 
 def mapping_narration_pause():
@@ -411,15 +412,27 @@ ARTWORKS = {
 }
 
 
-def get_biography(artist, age):
-    if age < 14:
-        return f"{artist} était un artiste très curieux et passionné."
-    elif age < 18:
-        return f"{artist} a marqué l’histoire de l’art."
-    elif age < 60:
-        return f"{artist} incarne une figure majeure."
-    else:
-        return f"{artist} représente un pilier fondamental."
+BIOGRAPHIES = {
+    "joconde": {
+        "enfant": "Léonard de Vinci était un génie curieux qui aimait tout observer : les oiseaux, l’eau, les visages. Il a peint la Joconde avec un sourire mystérieux que personne n’a encore réussi à expliquer !",
+        "ado": "Léonard de Vinci était à la fois peintre, scientifique et inventeur. La Joconde, peinte entre 1503 et 1519, est célèbre pour son regard énigmatique et la technique du sfumato, qui donne une impression de brume et de profondeur.",
+        "adulte": "La Joconde de Léonard de Vinci, peinte entre 1503 et 1519, est le portrait le plus célèbre de l’histoire de l’art. La technique du sfumato — fondus de tons sans contours nets — confère à l’œuvre sa profondeur et son mystère. Son sourire ambigu et son regard omnidirectionnel continuent de fasciner les chercheurs.",
+    },
+    "vangogh": {
+        "enfant": "Vincent Van Gogh aimait les couleurs vives et les tourbillons. Il a peint plus de 900 tableaux dans sa vie, dont beaucoup d’autoportraits pour se regarder lui-même !",
+        "ado": "Van Gogh a peint plus de 35 autoportraits entre 1886 et 1889. Son style unique, fait de coups de pinceau tourbillonnants et de couleurs intenses, exprimait ses émotions profondes. Il n’a vendu qu’un seul tableau de son vivant.",
+        "adulte": "Les autoportraits de Van Gogh, peints principalement entre 1886 et 1889, témoignent d’une quête identitaire intense. Sa technique post-impressionniste, aux coups de pinceau expressifs et aux couleurs saturées, influencera profondément l’expressionnisme du XXe siècle. Incompris de son vivant, il n’a vendu qu’une seule toile.",
+    },
+    "courbet": {
+        "enfant": "Gustave Courbet a peint son propre visage avec une expression de grande surprise. Ce tableau s’appelle Le Désespéré — c’est comme un selfie, mais peint il y a plus de 170 ans !",
+        "ado": "Le Désespéré est un autoportrait de Gustave Courbet peint vers 1843. Avec son regard écarquillé et ses mains dans les cheveux, Courbet se met en scène comme un personnage romantique tourmenté. C’est une œuvre très expressive, presque théâtrale.",
+        "adulte": "Le Désespéré (vers 1843) est l’un des autoportraits les plus dramatiques de Courbet. Chef de file du réalisme français, il y met en scène sa propre image avec une intensité romantique — regard écarquillé, mains crispées dans les cheveux. Cette œuvre préfigure la manière dont il construira tout au long de sa vie son image publique d’artiste rebelle.",
+    },
+}
+
+
+def get_biography(artist, age_group):
+    return BIOGRAPHIES[artist][age_group]
 
 
 @app.route("/select/<artist>")
@@ -446,8 +459,19 @@ def artwork(artist):
 
     age = int(age)
 
-    if age < 9:
-        return render_template("age.html", artist=artist, error="9 ans minimum")
+    if age < 6:
+        return render_template("age.html", artist=artist, error="Artimir n'est autorisé qu'à partir de l'âge de 6 ans.")
+
+    if age <= 11:
+        age_group = "enfant"
+    elif age <= 17:
+        age_group = "ado"
+    else:
+        age_group = "adulte"
+
+    session["age"] = age
+    session["age_group"] = age_group
+    session["artist"] = artist
 
     data = ARTWORKS[artist]
 
@@ -455,7 +479,7 @@ def artwork(artist):
         "artwork.html",
         artist_name=data["artist_name"],
         image_file=data["image_file"],
-        biography_text=get_biography(data["artist_name"], age)
+        biography_text=get_biography(artist, age_group)
     )
 
 
