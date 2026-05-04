@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Artimir — File d’attente</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=31">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 50% 20%, rgba(212,175,55,0.25), transparent 30%),
+                radial-gradient(circle at 20% 80%, rgba(212,175,55,0.12), transparent 35%),
+                linear-gradient(135deg, #050505, #15120a, #050505);
+            color: #d4af37;
+            font-family: Georgia, serif;
+            text-align: center;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background:
+                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 45px 45px;
+            animation: gridMove 12s linear infinite;
+        }
+
+        @keyframes gridMove {
+            from { transform: translateY(0); }
+            to { transform: translateY(45px); }
+        }
+
+        .card {
+            position: relative;
+            width: min(520px, 90vw);
+            padding: 45px 28px;
+            border-radius: 28px;
+            background: rgba(10,10,10,0.78);
+            border: 1px solid rgba(212,175,55,0.65);
+            box-shadow:
+                0 0 30px rgba(212,175,55,0.35),
+                0 0 90px rgba(212,175,55,0.12),
+                inset 0 0 30px rgba(212,175,55,0.08);
+            backdrop-filter: blur(14px);
+            z-index: 2;
+            animation: floatCard 4s ease-in-out infinite;
+        }
+
+        @keyframes floatCard {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .logo {
+            font-size: 34px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(212,175,55,0.6);
+        }
+
+        h1 {
+            font-size: 26px;
+            margin: 10px 0 22px;
+            color: #f7d86b;
+        }
+
+        .position-label {
+            opacity: 0.8;
+            font-size: 16px;
+        }
+
+        .position {
+            font-size: 76px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #fff1a8;
+            text-shadow:
+                0 0 18px rgba(255,241,168,0.7),
+                0 0 40px rgba(212,175,55,0.45);
+        }
+
+        .wait-time {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 11px 20px;
+            border-radius: 999px;
+            background: rgba(212,175,55,0.12);
+            border: 1px solid rgba(212,175,55,0.35);
+            color: #f7d86b;
+            box-shadow: 0 0 18px rgba(212,175,55,0.18);
+        }
+
+        .orbit {
+            position: relative;
+            width: 78px;
+            height: 78px;
+            margin: 34px auto 18px;
+            border: 1px solid rgba(212,175,55,0.35);
+            border-radius: 50%;
+            animation: rotate 2s linear infinite;
+        }
+
+        .orbit::before {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            background: #f7d86b;
+            border-radius: 50%;
+            box-shadow: 0 0 18px #f7d86b;
+        }
+
+        @keyframes rotate {
+            to { transform: rotate(360deg); }
+        }
+
+        .small {
+            font-size: 14px;
+            opacity: 0.65;
+            line-height: 1.5;
+        }
+
+        .progress {
+            height: 3px;
+            width: 80%;
+            margin: 24px auto 0;
+            border-radius: 999px;
+            overflow: hidden;
+            background: rgba(212,175,55,0.18);
+        }
+
+        .progress span {
+            display: block;
+            height: 100%;
+            width: 35%;
+            background: linear-gradient(90deg, transparent, #f7d86b, transparent);
+            animation: scan 1.6s ease-in-out infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translateX(-120%); }
+            100% { transform: translateX(300%); }
+        }
+
+        .dev-btn {
+            margin-top: 26px;
+            padding: 11px 24px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 230, 120, 0.8);
+            background: linear-gradient(135deg, #b98b13, #f7d86b, #fff1a8);
+            color: #111;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 18px rgba(212,175,55,0.35);
+        }
+
+        .dev-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 28px rgba(255,215,80,0.65);
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                padding: 36px 20px;
+            }
+
+            .logo {
+                font-size: 30px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .position {
+                font-size: 62px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <div class="logo">🎨 Artimir</div>
+
+        <h1>Expérience en cours</h1>
+
+        <div class="position-label">Votre position dans la file</div>
+
+        <div class="position">#{{ position }}</div>
+
+        <div class="wait-time">
+            ⏳ Temps estimé : environ {{ estimated_wait }} min
+        </div>
+
+        <div class="orbit"></div>
+
+        <div class="small">
+            Merci de patienter.<br>
+            La page se met à jour automatiquement.
+        </div>
+
+        <div class="progress">
+            <span></span>
+        </div>
+
+        <button onclick="adminAccess()" class="dev-btn">
+            🔧 Mode dev
+        </button>
+    </div>
+
+    <script>
+        setInterval(() => {
+            location.reload();
+        }, 3000);
+
+        setInterval(() => {
+            fetch("/api/heartbeat", { method: "POST" });
+        }, 5000);
+
+        function adminAccess() {
+            const code = prompt("Code développeur :");
+
+            if (!code) return;
+
+            fetch("/admin-login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ code: code })
+            })
+            .then(res => {
+                if (res.ok) {
+                    alert("Mode dev activé 🚀");
+                    location.href = "/";
+                } else {
+                    alert("Code incorrect");
+                }
+            })
+            .catch(() => {
+                alert("Erreur serveur");
+            });
+        }
+    </script>
+
+</body>
+</html>

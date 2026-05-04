@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Artimir — Pause</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=31">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: linear-gradient(135deg, #050505, #15120a, #050505);
+            color: #d4af37;
+            font-family: Georgia, serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 25px;
+        }
+
+        .card {
+            max-width: 520px;
+            padding: 35px 25px;
+            border: 1px solid rgba(212,175,55,0.5);
+            border-radius: 24px;
+            background: rgba(10,10,10,0.75);
+            box-shadow: 0 0 35px rgba(212,175,55,0.2);
+            transition: all 0.4s ease;
+        }
+
+        h1 {
+            color: #fff1a8;
+            font-size: 26px;
+        }
+
+        p {
+            font-size: 17px;
+            line-height: 1.6;
+            opacity: 0.85;
+        }
+
+        .time {
+            margin-top: 18px;
+            font-size: 22px;
+            color: #f7d86b;
+            font-weight: bold;
+        }
+
+        /* 🔥 animation déblocage */
+        @keyframes unlockPulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 35px rgba(212,175,55,0.2);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 70px rgba(212,175,55,0.8);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 35px rgba(212,175,55,0.2);
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+    <h1>🎨 Merci d’avoir utilisé Artimir</h1>
+
+    <p>
+        Pour permettre à tout le monde de profiter de l’expérience,
+        une petite pause est activée après chaque passage.
+    </p>
+
+    <p>
+        Vous pourrez réessayer automatiquement dans quelques instants.
+    </p>
+
+    <div class="time">
+        ⏳ Temps restant : <span id="timer">{{ remaining_seconds }}</span>
+    </div>
+</div>
+
+<script>
+    let seconds = parseInt(document.getElementById("timer").innerText);
+    const card = document.getElementById("card");
+
+    function formatTime(s) {
+        let min = Math.floor(s / 60);
+        let sec = s % 60;
+        return String(min).padStart(2, "0") + ":" + String(sec).padStart(2, "0");
+    }
+
+    function unlockAnimation() {
+        // vibration téléphone
+        if (navigator.vibrate) {
+            navigator.vibrate([200, 100, 200]);
+        }
+
+        // changer contenu
+        card.innerHTML = `
+            <h1>✅ Accès débloqué</h1>
+            <p>Vous pouvez maintenant utiliser Artimir</p>
+            <p>Redirection en cours...</p>
+        `;
+
+        // animation visuelle
+        card.style.animation = "unlockPulse 1s ease infinite";
+
+        // redirection
+        setTimeout(() => {
+            window.location.href = "/";
+        }, 3000);
+    }
+
+    function updateTimer() {
+        if (seconds <= 0) {
+            unlockAnimation();
+            return;
+        }
+
+        document.getElementById("timer").innerText = formatTime(seconds);
+        seconds--;
+    }
+
+    updateTimer();
+    setInterval(updateTimer, 1000);
+
+    // sync serveur toutes les 10 sec
+    setInterval(() => {
+        location.reload();
+    }, 10000);
+
+</script>
+
+</body>
+</html> 

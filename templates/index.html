@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Artimir</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=31">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+<div class="site-credit">
+    Site web conçu par l’équipe Artimir
+</div>
+
+<a href="https://www.education.gouv.fr/olympiades-des-sciences-de-l-ingenieur-465891"
+   target="_blank"
+   class="site-link-right">
+    Olympiades des Sciences de l'Ingénieur
+</a>
+
+<footer class="site-footer">
+    © Artimir 2026
+</footer>
+
+<div class="museum-background"></div>
+
+<div class="frame-container">
+    <div class="frame">
+
+        <h1>🎨 Artimir</h1>
+        <h2 style="margin-bottom:40px;">Choisissez une œuvre</h2>
+
+        <div style="display:flex; gap:30px; justify-content:center; flex-wrap:wrap;">
+
+            <a href="{{ url_for('select_artist', artist='joconde') }}" class="gold-btn">
+                La Joconde
+            </a>
+
+            <a href="{{ url_for('select_artist', artist='vangogh') }}" class="gold-btn">
+                L’Autoportrait
+            </a>
+
+            <a href="{{ url_for('select_artist', artist='courbet') }}" class="gold-btn">
+                Le Désespéré
+            </a>
+
+        </div>
+
+        <button onclick="adminAccess()" class="gold-btn" style="margin-top:35px;">
+            🔧 Mode dev
+        </button>
+
+    </div>
+</div>
+
+<script>
+    setInterval(() => {
+        fetch("/api/heartbeat", { method: "POST" });
+    }, 5000);
+
+    function adminAccess() {
+        const code = prompt("Code développeur :");
+
+        if (!code) return;
+
+        fetch("/admin-login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ code: code })
+        })
+        .then(res => {
+            if (res.ok) {
+                alert("Mode dev activé 🚀");
+                location.reload();
+            } else {
+                alert("Code incorrect");
+            }
+        })
+        .catch(() => {
+            alert("Erreur serveur");
+        });
+    }
+</script>
+
+</body>
+</html>

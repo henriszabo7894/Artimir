@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Votre âge</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=31">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<div class="museum-background"></div>
+
+<div class="frame-container">
+    <div class="frame">
+
+        <h1>Quel est votre âge ?</h1>
+
+        <form method="POST" action="{{ url_for('artwork', artist=artist) }}">
+            <input type="number" name="age" min="9" required
+                   style="padding:12px;border-radius:20px;border:none;width:200px;">
+            <br><br>
+            <button type="submit" class="gold-btn">Valider</button>
+        </form>
+
+        {% if error %}
+            <p style="color:red;margin-top:20px;">{{ error }}</p>
+        {% endif %}
+
+        <br>
+        <a href="/" class="gold-btn">← Retour</a>
+
+    </div>
+</div>
+<script>
+    setInterval(() => {
+        fetch("/api/heartbeat", { method: "POST" });
+    }, 5000);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,318 @@
+/* ================= GLOBAL ================= */
+
+html, body {
+    margin: 0;
+    min-height: 100%;
+    font-family: "Georgia", serif;
+    color: #f5f5f5;
+    overflow-x: hidden;
+}
+
+/* ================= FOND FUTURISTE ================= */
+
+.museum-background {
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(circle at 50% 20%, rgba(212,175,55,0.22), transparent 30%),
+        radial-gradient(circle at 20% 80%, rgba(212,175,55,0.12), transparent 35%),
+        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.06), transparent 35%),
+        linear-gradient(135deg, #050505, #15120a, #050505);
+    background-size: 200% 200%;
+    animation: slowMove 20s ease infinite;
+    z-index: -1;
+}
+
+.museum-background::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 45px 45px;
+    mask-image: radial-gradient(circle, black 45%, transparent 80%);
+}
+
+@keyframes slowMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* ================= CADRE ================= */
+
+.frame-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 90px 15px 80px;
+}
+
+.frame {
+    width: 750px;
+    max-width: 92vw;
+    padding: 50px;
+    background: rgba(10,10,10,0.82);
+    border: 2px solid rgba(212,175,55,0.9);
+    border-radius: 24px;
+    text-align: center;
+    backdrop-filter: blur(14px);
+    position: relative;
+
+    box-shadow:
+        0 0 25px rgba(212,175,55,0.35),
+        0 0 80px rgba(212,175,55,0.15),
+        inset 0 0 30px rgba(212,175,55,0.08);
+}
+
+.frame::before {
+    content: "";
+    display: block;
+    height: 2px;
+    width: 70%;
+    margin: 0 auto 25px;
+    background: linear-gradient(90deg, transparent, #d4af37, transparent);
+    box-shadow: 0 0 18px rgba(212,175,55,0.8);
+}
+
+.frame h1 {
+    font-size: 42px;
+    text-shadow:
+        0 0 12px rgba(255,255,255,0.25),
+        0 0 22px rgba(212,175,55,0.35);
+}
+
+.frame h2 {
+    text-shadow: 0 0 18px rgba(212,175,55,0.25);
+}
+
+/* ================= IMAGE ================= */
+
+.painting {
+    width: 250px;
+    max-width: 80%;
+    margin: 20px 0;
+    border-radius: 10px;
+
+    border: 8px solid #000;
+    box-shadow:
+        0 0 25px rgba(0,0,0,0.8),
+        0 0 28px rgba(212,175,55,0.25);
+}
+
+/* ================= TEXTE ================= */
+
+.biography {
+    font-size: 18px;
+    line-height: 1.8;
+}
+
+/* ================= CURSEUR ================= */
+
+#cursor {
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+/* ================= BOUTONS ================= */
+
+.gold-btn {
+    padding: 14px 34px;
+    margin: 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,230,120,0.8);
+
+    background: linear-gradient(135deg, #b98b13, #f7d86b, #fff1a8);
+    color: #111;
+    font-weight: bold;
+    cursor: pointer;
+
+    box-shadow:
+        0 0 18px rgba(212,175,55,0.45),
+        inset 0 0 12px rgba(255,255,255,0.35);
+
+    transition: 0.3s;
+}
+
+.gold-btn:hover {
+    transform: translateY(-4px) scale(1.04);
+    box-shadow:
+        0 0 28px rgba(255,215,80,0.75),
+        0 0 60px rgba(212,175,55,0.35);
+}
+
+.hidden {
+    display: none;
+}
+
+/* ================= STEPS ================= */
+
+.step {
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
+    transition: 0.5s;
+}
+
+.step.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    position: relative;
+}
+
+/* ================= HEADER ================= */
+
+.site-credit {
+    position: fixed;
+    top: 25px;
+    left: 40px;
+    color: rgba(212,175,55,0.7);
+}
+
+.site-link-right {
+    position: fixed;
+    top: 25px;
+    right: 40px;
+    color: rgba(212,175,55,0.75);
+}
+
+/* ================= FOOTER (FIX FINAL) ================= */
+
+.site-footer {
+    position: fixed;
+    bottom: 15px;
+    width: 100%;
+
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+
+    font-size: 14px;
+    color: rgba(212,175,55,0.8);
+
+    z-index: 1000;
+}
+
+/* ================= TIMER ================= */
+
+.session-timer {
+    font-weight: bold;
+}
+
+/* ================= VISITEURS ================= */
+
+.visitor-counter {
+    margin-top: 15px;
+    color: rgba(212,175,55,0.85);
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 768px) {
+
+    .site-credit,
+    .site-link-right {
+        position: static;
+        text-align: center;
+        display: block;
+        margin: 5px 0;
+    }
+
+    .frame {
+        padding: 35px 18px;
+    }
+
+    .frame h1 {
+        font-size: 34px;
+    }
+
+    .frame h2 {
+        font-size: 26px;
+    }
+
+    .gold-btn {
+        display: block;
+        width: 80%;
+        margin: 15px auto;
+    }
+
+    .painting {
+        width: 170px;
+    }
+
+    .site-footer {
+        flex-direction: column;
+        gap: 5px;
+        text-align: center;
+    }
+}@media (max-width: 768px) {
+    body {
+        min-height: 100vh;
+        overflow-y: auto;
+    }
+
+    .frame-container {
+        min-height: auto;
+        padding: 20px 10px 120px;
+        align-items: flex-start;
+    }
+
+    .frame {
+        width: 94vw;
+        min-height: auto;
+        padding: 28px 18px;
+        margin-top: 20px;
+    }
+
+    .frame h1 {
+        font-size: 42px;
+        margin-bottom: 18px;
+    }
+
+    .frame h2 {
+        font-size: 28px;
+        margin-bottom: 22px;
+    }
+
+    .artist-image,
+    .artwork-image,
+    .portrait-img,
+    .frame img {
+        max-width: 75vw;
+        max-height: 32vh;
+        object-fit: contain;
+    }
+
+    #typedText {
+        display: block;
+        font-size: 17px;
+        line-height: 1.45;
+        margin: 22px auto 18px;
+        max-width: 88%;
+    }
+
+    .gold-btn {
+        font-size: 16px;
+        padding: 14px 28px;
+        margin-top: 14px;
+    }
+
+    .site-footer {
+        position: relative;
+        margin-top: 20px;
+    }
+
+    #sessionTimer {
+        position: relative;
+        margin-top: 16px;
+        font-size: 18px;
+    }
+}

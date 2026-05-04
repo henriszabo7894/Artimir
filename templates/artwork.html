@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Artimir</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=31">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+<div class="site-credit">
+    Site web conçu par l’équipe Artimir
+</div>
+
+<a href="https://www.education.gouv.fr/olympiades-des-sciences-de-l-ingenieur-465891"
+   target="_blank"
+   class="site-link-right">
+    Olympiades des Sciences de l'Ingénieur
+</a>
+
+<footer class="site-footer">
+    <span>© Artimir 2026</span>
+    <span id="sessionTimer">⏳ 05:00</span>
+</footer>
+
+<div class="museum-background"></div>
+
+<div class="frame-container">
+    <div class="frame">
+
+        <h1>🎨 Artimir</h1>
+
+       
+        <!-- STEP 1 -->
+        <div id="step1" class="step active">
+            <h2>{{ artist_name }}</h2>
+
+            <img class="painting"
+                 src="{{ url_for('static', filename='images/' + image_file) }}"
+                 alt="{{ artist_name }}">
+
+            <p class="biography">
+                <span id="typedText"></span><span id="cursor">|</span>
+            </p>
+
+            <button id="btnToHeight" class="gold-btn hidden">
+                Suivant
+            </button>
+        </div>
+
+        <!-- STEP 2 -->
+        <div id="step2" class="step">
+            <h1>Réglez la hauteur d’Artimir</h1>
+
+            <div class="height-controls">
+
+                <button id="btnMotorUp" class="gold-btn control-btn">
+                    ⬆ Monter
+                </button>
+
+                <button id="btnMotorDown" class="gold-btn control-btn">
+                    ⬇ Descendre
+                </button>
+
+                <button id="btnMotorStop" class="gold-btn stop-btn">
+                    ⛔ Stop
+                </button>
+
+            </div>
+
+            <p id="motorStatus" class="motor-status">
+                Moteur arrêté
+            </p>
+
+            <button id="btnToNarration" class="gold-btn">
+                Suivant
+            </button>
+        </div>
+
+        <!-- STEP 3 -->
+        <div id="step3" class="step">
+            <h2>Voulez-vous écouter la biographie ?</h2>
+
+            <button id="narrationYes" class="gold-btn">Oui</button>
+            <button id="narrationNo" class="gold-btn">Non</button>
+
+            <br>
+
+            <button id="pauseNarration" class="gold-btn hidden">Pause</button>
+            <button id="resumeNarration" class="gold-btn hidden">Reprendre</button>
+        </div>
+
+        <!-- STEP 4 -->
+        <div id="step4" class="step">
+            <h2>Voulez-vous recevoir votre portrait par email ?</h2>
+
+            <button id="mailYes" class="gold-btn">Oui</button>
+            <button id="mailNo" class="gold-btn">Non</button>
+        </div>
+
+        <!-- STEP 5 -->
+        <div id="step5" class="step">
+            <h2>Entrez votre email</h2>
+
+            <input id="emailInput"
+                   class="email-input"
+                   type="email"
+                   placeholder="exemple@email.com">
+
+            <br>
+
+            <button id="sendEmail" class="gold-btn">
+                Envoyer
+            </button>
+
+            <br>
+
+            <a href="/reset" class="gold-btn">
+                Terminer
+            </a>
+        </div>
+
+        <!-- STEP 6 -->
+        <div id="step6" class="step">
+            <h2>Merci d’avoir utilisé Artimir 🎨</h2>
+
+            <a href="/reset" class="gold-btn">
+                Terminer
+            </a>
+        </div>
+
+        <!-- ⛔ FIN SESSION -->
+        <div id="sessionEndMessage" class="session-end hidden">
+            <h2>⏳ Votre session est terminée</h2>
+            <p>Merci de laisser votre place aux autres utilisateurs</p>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const biographyText = {{ biography_text|tojson }};
+</script>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+<script>
+    setInterval(() => {
+        fetch("/api/heartbeat", { method: "POST" });
+    }, 5000);
+</script>
+
+</body>
+</html>
